@@ -1,0 +1,25 @@
+#AMI Creation Date
+dateAMI=$(date +"%Y-%m-%d")
+
+$Log
+log() {
+    echo "[$(date +"%Y-%m-%d"+"%T")]: $*"
+}
+
+#Get List of Instances
+instance_list=$(aws ec2 describe-instances --query Reservations[].Instances[].InstanceId)
+
+#Create Image of all Instances
+ami_instances() {
+	for instance_id in $instance_list; do
+		log "Instance ID is $instance_id"
+		#if [ $instance_id == 'instace-id' ]; then		
+			echo "AMI for $instance_id ($dateAMI)"
+			aws ec2 create-image --instance-id $instance_id --name "AMI for $instance_id ($dateAMI)" --description ""
+			log "Image Created"
+		#fi
+		
+	done
+# }
+
+ami_instances
